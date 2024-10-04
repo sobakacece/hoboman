@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://crqio2gdjv62"]
+
+[ext_resource type="PackedScene" uid="uid://dyinu3htxevil" path="res://scenes/player.tscn" id="1_cg5pu"]
+[ext_resource type="PackedScene" uid="uid://dwr0d7xpg7th5" path="res://scenes/box.tscn" id="2_a2y87"]
+
+[sub_resource type="Environment" id="Environment_5t8v3"]
+background_mode = 2
+ambient_light_color = Color(0.848905, 0.848905, 0.848905, 1)
+ambient_light_energy = 1.08
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v0l21"]
+albedo_color = Color(0.403922, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7sutg"]
+material = SubResource("StandardMaterial3D_v0l21")
+size = Vector3(60, 1, 60)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_epsi7"]
+size = Vector3(50, 1, 50)
+
+[node name="root" type="Node3D"]
+
+[node name="player" parent="." instance=ExtResource("1_cg5pu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.16788, 0)
+axis_lock_angular_x = false
+axis_lock_angular_y = false
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5t8v3")
+
+[node name="Ground" type="StaticBody3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, -3.14332, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("BoxMesh_7sutg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("BoxShape3D_epsi7")
+
+[node name="Box" parent="." instance=ExtResource("2_a2y87")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.27948)
+
+[node name="Box2" parent="." instance=ExtResource("2_a2y87")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.27347, 0, 3.32314)
+
+[node name="Box" parent="Box2" instance=ExtResource("2_a2y87")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.23571)
