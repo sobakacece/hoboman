@@ -1,55 +1,67 @@
-extends CharacterBody3D
+# player.gd
+extends RigidBody3D
 
-
-var last_mouse_position
 @export_category("Movement")
-@export var slowdown : float
+@export var slowdown : float = 10.0
+@export var rotation_speed : float = 5.0
 
 @export_category("Shoot")
-@export var shoot_cd : float
-@export var shoot_force : float
-#nodes
-var camera
-var spring_arm
+@export var shoot_cd : float = 0.5
+@export var shoot_force : float = 10.0
+@export var linear_dumper = 120
+@export var angular_dumper = 10
 
-#temp_nodes
+var camera : Camera3D
 var shoot_timer : SceneTreeTimer
+var torso : Node3D
 
 func _ready() -> void:
-	camera = $SpringArm3D/PlayerCamera
-	spring_arm = $SpringArm3D
+	camera = $Suspention/SpringArm3D/Camera3D
+	torso = $Suspention/Torso
 
 func _input(event: InputEvent) -> void:
-	if (event is InputEventMouse):
-		track_mouse_position(event)
-	
-	if (event.is_action("shoot") && !shoot_timer):
+	if (event.is_action_pressed("shoot") && !shoot_timer):
 		shoot()
 		shoot_timer = get_tree().create_timer(shoot_cd, false, true)
 		shoot_timer.timeout.connect(func() : shoot_timer = null)
 		
 func _physics_process(delta: float) -> void:
-
 	
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-	#var input_dir := Input.get_vector("left", "right", "forward", "back")
-	#var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	#if direction:
-		#velocity.x = direction.x * SPEED
-		#velocity.z = direction.z * SPEED
-	#else:
-		velocity.x = move_toward(velocity.x, 0, slowdown)
-		velocity.z = move_toward(velocity.z, 0, slowdown)
+	# Update torso rotation
+	var space_state = get_world_3d().direct_space_state
+	var mouse_pos = get_viewport().get_mouse_position()
+	var from = camera.project_ray_origin(mouse_pos)
+	var ray_normal = camera.project_ray_normal(mouse_pos)
+	var query = PhysicsRayQueryParameters3D.create(from, from + ray_normal * 1000)
+	query.exclude = [self]
+	
+	var result = space_state.intersect_ray(query)
+	if result:
+		# Project the point onto the ground plane at torso's height
+		var target_point = Vector3(result.position.x, torso.global_position.y, result.position.z)
+		
+		# Get direction to target (positive Z is forward)
+		var direction = (target_point - torso.global_position).normalized()
+		
+		# Create basis with correct forward direction
+		var target_basis = Basis.looking_at(direction, Vector3.UP)
+		
+		# Smoothly rotate to target
+		torso.basis = torso.basis.slerp(target_basis, rotation_speed * delta)
+	
+	dumping(delta)
 
-	move_and_slide()
-
-func track_mouse_position(event : InputEventMouse):
-	var from = camera.project_ray_origin(event.position)
-	last_mouse_position = from + camera.project_ray_normal(event.position) * 10
-	look_at(Vector3 (last_mouse_position.x, 0, last_mouse_position.z))
+func dumping(delta):
+	var linear_dump = -linear_velocity * delta * linear_dumper
+	var linear_dump_force = Vector3(linear_dump.x, 0, linear_dump.z)
+	apply_force(linear_dump_force)
+	
+	var angular_dump = -angular_velocity * delta * angular_dumper
+	var angular_dump_force = Vector3(angular_dump.x, angular_dump.y, angular_dump.z)
+	apply_torque(angular_dump_force)
+	
 
 func shoot():
-	velocity.x += transform.basis.z.x * shoot_force
-	velocity.z += transform.basis.z.z * shoot_force
+	# Forward is positive Z in local space
+	var forward = torso.basis.z.normalized()  # Using basis.z directly
+	apply_impulse(forward * shoot_force)

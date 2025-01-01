@@ -21,12 +21,15 @@ size = Vector3(50, 1, 50)
 [node name="root" type="Node3D"]
 
 [node name="player" parent="." instance=ExtResource("1_cg5pu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.16788, 0)
-axis_lock_angular_x = false
-axis_lock_angular_y = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35149, 0.316641)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_5t8v3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(0.875, 0.459279, -0.153093, -0.0290065, 0.365395, 0.9304, 0.483253, -0.80966, 0.333043, -2, 10, -2)
+shadow_enabled = true
+shadow_opacity = 0.95
 
 [node name="Ground" type="StaticBody3D" parent="."]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, -3.14332, 0)
@@ -38,7 +41,7 @@ mesh = SubResource("BoxMesh_7sutg")
 shape = SubResource("BoxShape3D_epsi7")
 
 [node name="Box" parent="." instance=ExtResource("2_a2y87")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.27948)
+transform = Transform3D(-3.03627, 0.085094, -3.32121, 0, 0.221309, 2.55403, 3.03627, 0.085094, -3.32121, 0.177955, 0, 0.587659)
 
 [node name="Box2" parent="." instance=ExtResource("2_a2y87")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.27347, 0, 3.32314)
