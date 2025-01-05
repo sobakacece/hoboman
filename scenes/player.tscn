@@ -29,8 +29,12 @@ size = Vector3(0.175, 0.14, 2.58)
 
 [node name="player" type="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mass = 80.0
 physics_material_override = SubResource("PhysicsMaterial_4s8sx")
 script = ExtResource("1_5thm2")
+shoot_force = 500.0
+linear_dumper = 4000
+angular_dumper = 200
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_7hv5h")
@@ -58,10 +62,10 @@ mesh = SubResource("BoxMesh_05yma")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.510211, 0)
 mesh = SubResource("CapsuleMesh_qcgxo")
 
-[node name="Gun" type="Node3D" parent="Suspention/Torso"]
+[node name="Shotgun" type="Node3D" parent="Suspention/Torso"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Suspention/Torso/Gun"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Suspention/Torso/Shotgun"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.471929, 0, 0, -1.281)
 mesh = SubResource("BoxMesh_s5rxq")
 skeleton = NodePath("../../../Cart")

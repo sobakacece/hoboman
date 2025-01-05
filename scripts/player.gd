@@ -16,6 +16,8 @@ var shoot_timer : SceneTreeTimer
 var torso : Node3D
 var shotgun : Node3D
 
+var object_in_scope : Node
+
 func _ready() -> void:
 	camera = $Suspention/SpringArm3D/Camera3D
 	torso = $Suspention/Torso
@@ -38,6 +40,7 @@ func _physics_process(delta: float) -> void:
 	
 	var result = space_state.intersect_ray(query)
 	if result:
+		object_in_scope = result.collider#.get_parent()
 		# Torso rotation (yaw/left-right only)
 		var target_point = Vector3(result.position.x, torso.global_position.y, result.position.z)
 		var direction = (target_point - torso.global_position).normalized()
@@ -75,5 +78,7 @@ func break_handler():
 
 func shoot():
 	# Forward is positive Z in local space
-	var forward = torso.basis.z.normalized()  # Using basis.z directly
+	var forward = shotgun.global_basis.z.normalized()  # Using basis.z directly
 	apply_impulse(forward * shoot_force)
+	if object_in_scope is RigidBody3D:
+		object_in_scope.apply_impulse(-forward * shoot_force)
