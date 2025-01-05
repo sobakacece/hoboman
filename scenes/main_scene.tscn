@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://crqio2gdjv62"]
+[gd_scene load_steps=8 format=3 uid="uid://crqio2gdjv62"]
 
 [ext_resource type="PackedScene" uid="uid://dyinu3htxevil" path="res://scenes/player.tscn" id="1_cg5pu"]
 [ext_resource type="PackedScene" uid="uid://dwr0d7xpg7th5" path="res://scenes/box.tscn" id="2_a2y87"]
@@ -8,8 +8,12 @@ background_mode = 2
 ambient_light_color = Color(0.848905, 0.848905, 0.848905, 1)
 ambient_light_energy = 1.08
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_42clk"]
+friction = 100.0
+rough = true
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v0l21"]
-albedo_color = Color(0.403922, 1, 1, 1)
+albedo_color = Color(0.2736, 0.34272, 0.36, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_7sutg"]
 material = SubResource("StandardMaterial3D_v0l21")
@@ -21,18 +25,18 @@ size = Vector3(50, 1, 50)
 [node name="root" type="Node3D"]
 
 [node name="player" parent="." instance=ExtResource("1_cg5pu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35149, 0.316641)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.16788, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_5t8v3")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
-transform = Transform3D(0.875, 0.459279, -0.153093, -0.0290065, 0.365395, 0.9304, 0.483253, -0.80966, 0.333043, -2, 10, -2)
+transform = Transform3D(0.5, 0.433013, -0.75, 0, 0.866025, 0.5, 0.866025, -0.25, 0.433013, 0, 0, 5.27948)
 shadow_enabled = true
-shadow_opacity = 0.95
 
 [node name="Ground" type="StaticBody3D" parent="."]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, -3.14332, 0)
+physics_material_override = SubResource("PhysicsMaterial_42clk")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
 mesh = SubResource("BoxMesh_7sutg")
@@ -41,7 +45,10 @@ mesh = SubResource("BoxMesh_7sutg")
 shape = SubResource("BoxShape3D_epsi7")
 
 [node name="Box" parent="." instance=ExtResource("2_a2y87")]
-transform = Transform3D(-3.03627, 0.085094, -3.32121, 0, 0.221309, 2.55403, 3.03627, 0.085094, -3.32121, 0.177955, 0, 0.587659)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.27948)
+
+[node name="Box3" parent="." instance=ExtResource("2_a2y87")]
+transform = Transform3D(3.34255e-07, 0.0797417, -8.93022, -8.95634e-08, 0.2976, 2.39284, 2.63887, 0, 1.21237e-06, 1, 0.314899, -0.084794)
 
 [node name="Box2" parent="." instance=ExtResource("2_a2y87")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.27347, 0, 3.32314)

@@ -14,10 +14,12 @@ extends RigidBody3D
 var camera : Camera3D
 var shoot_timer : SceneTreeTimer
 var torso : Node3D
+var shotgun : Node3D
 
 func _ready() -> void:
 	camera = $Suspention/SpringArm3D/Camera3D
 	torso = $Suspention/Torso
+	shotgun = $Suspention/Torso/Shotgun
 
 func _input(event: InputEvent) -> void:
 	if (event.is_action_pressed("shoot") && !shoot_timer):
@@ -26,28 +28,31 @@ func _input(event: InputEvent) -> void:
 		shoot_timer.timeout.connect(func() : shoot_timer = null)
 		
 func _physics_process(delta: float) -> void:
-	
-	# Update torso rotation
 	var space_state = get_world_3d().direct_space_state
 	var mouse_pos = get_viewport().get_mouse_position()
 	var from = camera.project_ray_origin(mouse_pos)
 	var ray_normal = camera.project_ray_normal(mouse_pos)
 	var query = PhysicsRayQueryParameters3D.create(from, from + ray_normal * 1000)
+	
 	query.exclude = [self]
 	
 	var result = space_state.intersect_ray(query)
 	if result:
-		# Project the point onto the ground plane at torso's height
+		# Torso rotation (yaw/left-right only)
 		var target_point = Vector3(result.position.x, torso.global_position.y, result.position.z)
-		
-		# Get direction to target (positive Z is forward)
 		var direction = (target_point - torso.global_position).normalized()
+		var torso_target_basis = Basis.looking_at(direction, Vector3.UP)
+		torso.basis = torso.basis.slerp(torso_target_basis, rotation_speed * delta)
 		
-		# Create basis with correct forward direction
-		var target_basis = Basis.looking_at(direction, Vector3.UP)
+		const MAX_PITCH = PI/4  # 45 degrees
+		# Shotgun rotation (pitch/up-down only)
+		var to_target = result.position - shotgun.global_position
+		var pitch = atan2(to_target.y, sqrt(to_target.x * to_target.x + to_target.z * to_target.z))
+		pitch = clamp(pitch, -MAX_PITCH, MAX_PITCH)
+		var pitch_basis = Basis(Vector3.RIGHT, pitch)  # Rotate around local X axis
+		shotgun.basis = pitch_basis
 		
-		# Smoothly rotate to target
-		torso.basis = torso.basis.slerp(target_basis, rotation_speed * delta)
+		Global.debug([shotgun.global_position, result.position])
 	
 	dumping(delta)
 
@@ -56,10 +61,17 @@ func dumping(delta):
 	var linear_dump_force = Vector3(linear_dump.x, 0, linear_dump.z)
 	apply_force(linear_dump_force)
 	
-	var angular_dump = -angular_velocity * delta * angular_dumper
+	var breaks = 30 if Input.is_action_pressed("break") else 1
+	
+	var angular_dump = -angular_velocity * delta * angular_dumper * breaks
 	var angular_dump_force = Vector3(angular_dump.x, angular_dump.y, angular_dump.z)
 	apply_torque(angular_dump_force)
 	
+func break_handler():
+	#if on ground
+	#transform horizontal velocity into vertical impulse with the floowing formula:
+	#var vertical_impulse = 1 / angular_velocity.length()**10 + 1
+	pass
 
 func shoot():
 	# Forward is positive Z in local space
