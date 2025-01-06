@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 
 Global="*res://scripts/global.gd"
 FlowSystem="*res://scripts/flowsystem.gd"
+GlobalRef="*res://scripts/global_ref.gd"
 
 [input]
 

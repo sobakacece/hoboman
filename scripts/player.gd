@@ -19,6 +19,9 @@ var shotgun : Node3D
 
 var object_in_scope : Node
 
+func _init() -> void:
+	GlobalRef.player = self
+
 func _ready() -> void:
 	camera = $Suspention/SpringArm3D/Camera3D
 	torso = $Suspention/Torso
