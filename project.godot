@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 Global="*res://scripts/global.gd"
+FlowSystem="*res://scripts/flowsystem.gd"
 
 [input]
 
