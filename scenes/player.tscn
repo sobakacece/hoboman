@@ -11,6 +11,7 @@ rough = true
 bounce = 0.5
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7hv5h"]
+radius = 0.75
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yad2l"]
 albedo_texture = ExtResource("2_tnpiu")
@@ -52,7 +53,7 @@ target = NodePath("..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.510211, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Suspention/Cart"]
-transform = Transform3D(1.50862, 0, 0, 0, 0.5, 0, 0, 0, 1.60907, 0, 0, 0)
+transform = Transform3D(2, 0, 0, 0, 1.125, 0, 0, 0, 1.5, 0, -0.7, 0)
 material_override = ExtResource("4_c01g4")
 mesh = SubResource("BoxMesh_05yma")
 

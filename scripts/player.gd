@@ -4,7 +4,7 @@ class_name Player
 
 @export_category("Movement")
 @export var slowdown : float = 10.0
-@export var rotation_speed : float = 5.0
+@export var rotation_speed : float = 15.0
 
 @export_category("Shoot")
 @export var shoot_cd : float = 0.5
@@ -44,20 +44,21 @@ func _physics_process(delta: float) -> void:
 	
 	var result = space_state.intersect_ray(query)
 	if result:
-		object_in_scope = result.collider#.get_parent()
+		object_in_scope = result.collider
 		# Torso rotation (yaw/left-right only)
 		var target_point = Vector3(result.position.x, torso.global_position.y, result.position.z)
 		var direction = (target_point - torso.global_position).normalized()
 		var torso_target_basis = Basis.looking_at(direction, Vector3.UP)
 		torso.basis = torso.basis.slerp(torso_target_basis, rotation_speed * delta)
 		
-		const MAX_PITCH = PI/4  # 45 degrees
 		# Shotgun rotation (pitch/up-down only)
+		const MAX_PITCH = PI/8
 		var to_target = result.position - shotgun.global_position
 		var pitch = atan2(to_target.y, sqrt(to_target.x * to_target.x + to_target.z * to_target.z))
 		pitch = clamp(pitch, -MAX_PITCH, MAX_PITCH)
-		var pitch_basis = Basis(Vector3.RIGHT, pitch)  # Rotate around local X axis
-		shotgun.basis = pitch_basis
+		
+		var target_basis = Basis.IDENTITY.rotated(Vector3.RIGHT, pitch)
+		shotgun.basis = shotgun.basis.slerp(target_basis, rotation_speed * delta)
 		
 		Global.debug([shotgun.global_position, result.position])
 	
@@ -68,7 +69,7 @@ func dumping(delta):
 	var linear_dump_force = Vector3(linear_dump.x, 0, linear_dump.z)
 	apply_force(linear_dump_force)
 	
-	var breaks = 30 if Input.is_action_pressed("break") else 1
+	var breaks = 50 if Input.is_action_pressed("break") else 1
 	
 	var angular_dump = -angular_velocity * delta * angular_dumper * breaks
 	var angular_dump_force = Vector3(angular_dump.x, angular_dump.y, angular_dump.z)
