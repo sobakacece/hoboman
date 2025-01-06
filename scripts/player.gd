@@ -1,5 +1,6 @@
 # player.gd
 extends RigidBody3D
+class_name Player
 
 @export_category("Movement")
 @export var slowdown : float = 10.0
