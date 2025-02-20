@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cpt1v344gmqh3"]
+
+[ext_resource type="Material" uid="uid://bau3xtofjudn1" path="res://materials/alpha_debud.tres" id="1_5htam"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_kagss"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[node name="DebugEffect" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = ExtResource("1_5htam")
+mesh = SubResource("BoxMesh_kagss")

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://co7ign6ua5a02"]
+
+[ext_resource type="Script" path="res://scenes/projectile.gd" id="1_lo6b2"]
+
+[node name="Projectile" type="Node"]
+script = ExtResource("1_lo6b2")
+impact_force = 100.0
