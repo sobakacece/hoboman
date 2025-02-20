@@ -1,4 +1,4 @@
-extends Node
+extends Node3D
 
 var debug_mode = true
 var debug_mesh: ImmediateMesh
@@ -61,3 +61,24 @@ func debug(data):
 	elif data is Array and data.size() == 2:
 		if data[0] is Vector3 and data[1] is Vector3:
 			add_debug_line(data[0], data[1])
+
+func directional_reycast(vector: Vector3, from_object):
+	vector.normalized()
+	var query = PhysicsRayQueryParameters3D.create(from_object.global_position, from_object.global_position + vector * 1000)
+	
+	query.exclude = [self]
+	var space_state = get_world_3d().direct_space_state
+	var result = space_state.intersect_ray(query)
+	return result
+
+func get_Vector3_of_raycast(vector: Vector3, from_object):
+	var result = directional_reycast(vector, from_object)
+	if result:
+		return result.position
+	return null
+
+func get_object_of_raycast(vector: Vector3, from_object):
+	var result = directional_reycast(vector, from_object)
+	if result:
+		return result.collider
+	return null

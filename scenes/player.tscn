@@ -1,10 +1,13 @@
-[gd_scene load_steps=13 format=3 uid="uid://dyinu3htxevil"]
+[gd_scene load_steps=22 format=3 uid="uid://dyinu3htxevil"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_5thm2"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="2_op8ce"]
 [ext_resource type="Texture2D" uid="uid://d3wfi3qhp7fig" path="res://icon.svg" id="2_tnpiu"]
 [ext_resource type="Script" path="res://scenes/target_follower.gd" id="2_xgyyx"]
 [ext_resource type="Material" uid="uid://bau3xtofjudn1" path="res://materials/alpha_debud.tres" id="4_c01g4"]
+[ext_resource type="Script" path="res://scenes/firearm.gd" id="5_dycce"]
+[ext_resource type="Script" path="res://scenes/up_alighner_modifier.gd" id="7_6osdw"]
+[ext_resource type="Script" path="res://scenes/speed_forward_alighner_modifyer.gd" id="8_wbkbb"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4s8sx"]
 rough = true
@@ -20,16 +23,36 @@ albedo_texture = ExtResource("2_tnpiu")
 radius = 0.75
 height = 1.5
 
-[sub_resource type="BoxMesh" id="BoxMesh_05yma"]
-
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_qcgxo"]
 radius = 0.4
 
 [sub_resource type="BoxMesh" id="BoxMesh_s5rxq"]
 size = Vector3(0.175, 0.14, 2.58)
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ea1lk"]
+friction = 0.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2ddv0"]
+size = Vector3(1.99896, 1.10059, 1.47595)
+
+[sub_resource type="BoxMesh" id="BoxMesh_05yma"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_7bu62"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_chs68"]
+friction = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cvatl"]
+top_radius = 0.3
+bottom_radius = 0.3
+height = 0.1
+radial_segments = 5
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_uch4w"]
+
 [node name="player" type="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+collision_layer = 2
 mass = 80.0
 physics_material_override = SubResource("PhysicsMaterial_4s8sx")
 script = ExtResource("1_5thm2")
@@ -49,27 +72,29 @@ script = ExtResource("2_xgyyx")
 lag = false
 target = NodePath("..")
 
-[node name="Cart" type="Node3D" parent="Suspention"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.510211, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Suspention/Cart"]
-transform = Transform3D(2, 0, 0, 0, 1.125, 0, 0, 0, 1.5, 0, -0.7, 0)
-material_override = ExtResource("4_c01g4")
-mesh = SubResource("BoxMesh_05yma")
-
 [node name="Torso" type="Node3D" parent="Suspention"]
 
 [node name="CSGMesh3D" type="CSGMesh3D" parent="Suspention/Torso"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.510211, 0)
 mesh = SubResource("CapsuleMesh_qcgxo")
 
-[node name="Shotgun" type="Node3D" parent="Suspention/Torso"]
+[node name="Firearm" type="Node3D" parent="Suspention/Torso" node_paths=PackedStringArray("shooting_point")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("5_dycce")
+between_shots_delay = null
+spread_cone_degree = 25.0
+projectiles_per_load = null
+projectiles_per_shot = null
+reload_time = null
+shooting_point = NodePath("MeshInstance3D/ShootingPoint")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Suspention/Torso/Shotgun"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Suspention/Torso/Firearm"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.471929, 0, 0, -1.281)
 mesh = SubResource("BoxMesh_s5rxq")
-skeleton = NodePath("../../../Cart")
+skeleton = NodePath("../../../../Cart")
+
+[node name="ShootingPoint" type="Node3D" parent="Suspention/Torso/Firearm/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.40983)
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Suspention"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.46706, 9.02576)
@@ -83,3 +108,72 @@ current = true
 size = 25.0
 script = ExtResource("2_op8ce")
 pan_coefficient = 0.005
+
+[node name="Cart" type="Node3D" parent="."]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Cart"]
+collision_layer = 4
+mass = 60.0
+physics_material_override = SubResource("PhysicsMaterial_ea1lk")
+script = ExtResource("2_xgyyx")
+offset = Vector3(0, 0.505, 0)
+lag = false
+is_top_level = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cart/RigidBody3D"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.00108337, -0.694824, 0.00419617)
+shape = SubResource("BoxShape3D_2ddv0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cart/RigidBody3D"]
+transform = Transform3D(-8.74228e-08, 0, -1.5, 0, 1.125, 0, 2, 0, -6.55671e-08, 0.00419617, -0.7, -0.00108337)
+material_override = ExtResource("4_c01g4")
+mesh = SubResource("BoxMesh_05yma")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cart/RigidBody3D/MeshInstance3D"]
+transform = Transform3D(-3.07355e-08, -0.305757, 4.10581e-09, 0, -1.33651e-08, -0.09393, 0.703146, -1.33651e-08, 1.79471e-16, -0.741527, 0.467604, -0.00108333)
+material_override = ExtResource("4_c01g4")
+mesh = SubResource("PrismMesh_7bu62")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="Node3D" parent="Cart/RigidBody3D/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.488292, -0.483143, 0.480227)
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Cart/RigidBody3D/MeshInstance3D/MeshInstance3D2"]
+collision_layer = 0
+collision_mask = 0
+physics_material_override = SubResource("PhysicsMaterial_chs68")
+gravity_scale = 0.0
+script = ExtResource("2_xgyyx")
+lag = false
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Cart/RigidBody3D/MeshInstance3D/MeshInstance3D2/RigidBody3D"]
+transform = Transform3D(6.06163e-15, 3.88546e-08, 0.5, 0.83727, -3.88546e-08, -1.17725e-15, 3.65982e-08, 0.888889, -2.18557e-08, 0, 0, 0)
+material_override = ExtResource("4_c01g4")
+mesh = SubResource("CylinderMesh_cvatl")
+skeleton = NodePath("../../../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cart/RigidBody3D/MeshInstance3D/MeshInstance3D2/RigidBody3D"]
+transform = Transform3D(2.63681e-15, 1.69017e-08, 0.2175, 0.364212, -1.69017e-08, 1.34869e-16, 1.59202e-08, 0.386667, -9.50722e-09, 0, 0, 0)
+shape = SubResource("SphereShape3D_uch4w")
+
+[node name="SpeedForwardAlighnerModifyer" type="Node" parent="Cart/RigidBody3D/MeshInstance3D/MeshInstance3D2/RigidBody3D" node_paths=PackedStringArray("speed_target")]
+script = ExtResource("8_wbkbb")
+speed_target = NodePath("../../../../../..")
+alignment_strength = 20.0
+min_velocity_threshold = 0.2
+inverted = true
+
+[node name="UpAlighnerModifier" type="Node" parent="Cart/RigidBody3D/MeshInstance3D/MeshInstance3D2/RigidBody3D"]
+script = ExtResource("7_6osdw")
+alignment_strength = 50.0
+
+[node name="UpAlighnerModifier" type="Node" parent="Cart/RigidBody3D"]
+script = ExtResource("7_6osdw")
+alignment_strength = 50.0
+
+[node name="SpeedForwardAlighnerModifyer" type="Node" parent="Cart/RigidBody3D" node_paths=PackedStringArray("speed_target")]
+script = ExtResource("8_wbkbb")
+speed_target = NodePath("../../..")
+alignment_strength = 4.0
+min_velocity_threshold = 0.2

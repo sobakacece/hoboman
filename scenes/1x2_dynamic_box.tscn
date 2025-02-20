@@ -10,6 +10,7 @@ material = SubResource("StandardMaterial3D_gp7ld")
 size = Vector3(1, 2, 1)
 
 [node name="Box" type="RigidBody3D"]
+collision_mask = 7
 mass = 50.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

@@ -20,8 +20,21 @@
               "icon": "lucide-file",
               "title": "idea_pool"
             }
+          },
+          {
+            "id": "adc029e771d6a2f3",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.8.3"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.8.3"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -40,7 +53,8 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "alphabetical",
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -162,6 +176,6 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "82bcdc0b314c7b51",
+  "active": "adc029e771d6a2f3",
   "lastOpenFiles": []
 }
