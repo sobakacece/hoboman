@@ -51,15 +51,9 @@ func shoot() -> Array:
 		
 		
 		var intersect_object = Global.get_object_of_raycast(-impulse, shooting_point)
-		if intersect_object is RigidBody3D: #імпульс цілі має передавати проджектайл, якщо він фізичний
-			intersect_object.apply_impulse(-impulse)
-			
-		var intersect_Vector3 = Global.get_Vector3_of_raycast(-impulse, shooting_point)
-		if intersect_Vector3:
-			var effect_instance = projectile.impact_effect.instantiate()
-			effect_instance.global_transform.origin = intersect_Vector3
-			# Add the effect to the current scene (or choose a more appropriate parent if needed)
-			get_tree().current_scene.add_child(effect_instance)
+		if intersect_object:
+			_on_hit(intersect_object, Global.get_Vector3_of_raycast(-impulse, shooting_point), impulse)
+
 
 		
 		impulse_vectors.push_front(impulse)
@@ -70,6 +64,19 @@ func shoot() -> Array:
 	start_cooldown(between_shots_delay)
 	return impulse_vectors  # Return average impulse
 
+func _on_hit(other : Node, hit_point : Vector3, impulse : Vector3):
+	if other is RigidBody3D: #імпульс цілі має передавати проджектайл, якщо він фізичний
+		other.apply_impulse(-impulse)
+
+	#чек чи чувак отримує дамаг
+	var damagable = other.get_children().filter(func(node): return node is IDamagable)
+	if damagable:
+		damagable[0].hit()
+
+	var effect_instance = projectile.impact_effect.instantiate()
+	# Add the effect to the current scene (or choose a more appropriate parent if needed)
+	get_tree().current_scene.add_child(effect_instance)
+	effect_instance.global_transform.origin = hit_point
 
 
 func start_cooldown(timer, callback_func = null):

@@ -81,4 +81,5 @@ func get_object_of_raycast(vector: Vector3, from_object):
 	var result = directional_reycast(vector, from_object)
 	if result:
 		return result.collider
+		
 	return null

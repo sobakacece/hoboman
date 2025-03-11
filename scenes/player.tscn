@@ -51,7 +51,6 @@ radial_segments = 5
 [sub_resource type="SphereShape3D" id="SphereShape3D_uch4w"]
 
 [node name="player" type="RigidBody3D" node_paths=PackedStringArray("firearm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_layer = 2
 mass = 80.0
 physics_material_override = SubResource("PhysicsMaterial_4s8sx")
@@ -82,11 +81,7 @@ mesh = SubResource("CapsuleMesh_qcgxo")
 [node name="Firearm" type="Node3D" parent="Suspention/Torso" node_paths=PackedStringArray("shooting_point")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("5_dycce")
-between_shots_delay = null
 spread_cone_degree = 25.0
-projectiles_per_load = null
-projectiles_per_shot = null
-reload_time = null
 shooting_point = NodePath("MeshInstance3D/ShootingPoint")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Suspention/Torso/Firearm"]

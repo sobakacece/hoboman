@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://k1p3uygd7668"]
+[gd_scene load_steps=7 format=3 uid="uid://k1p3uygd7668"]
 
 [ext_resource type="Script" uid="uid://b5inicdx886xp" path="res://scripts/enemy.gd" id="1_sbfnl"]
+[ext_resource type="Script" uid="uid://byfbyj0trmw17" path="res://scripts/enemy_damagable.gd" id="2_md0e3"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_go8d7"]
 
@@ -34,3 +35,6 @@ skeleton = NodePath("../MeshInstance3D")
 mesh = SubResource("SphereMesh_b7n3n")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="Damagable" type="Node" parent="."]
+script = ExtResource("2_md0e3")

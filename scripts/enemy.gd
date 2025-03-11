@@ -8,10 +8,6 @@ extends CharacterBody3D
 @export var offset : float
 var target_velocity : Vector3
 var shoot_timer : SceneTreeTimer
-#let's ai be something like:
-#look for player with raycast for distance and visibility
-#if not found -> move
-#if found -> delay -> shoot 
 
 # TODO: Split this shit in state machine
 func _process(delta: float) -> void:
