@@ -1,13 +1,13 @@
 [gd_scene load_steps=22 format=3 uid="uid://dyinu3htxevil"]
 
-[ext_resource type="Script" path="res://scripts/player.gd" id="1_5thm2"]
-[ext_resource type="Script" path="res://scripts/camera.gd" id="2_op8ce"]
+[ext_resource type="Script" uid="uid://b87nqxu62j54u" path="res://scripts/player.gd" id="1_5thm2"]
+[ext_resource type="Script" uid="uid://cup0ajp13wm8x" path="res://scripts/camera.gd" id="2_op8ce"]
 [ext_resource type="Texture2D" uid="uid://d3wfi3qhp7fig" path="res://icon.svg" id="2_tnpiu"]
-[ext_resource type="Script" path="res://scenes/target_follower.gd" id="2_xgyyx"]
+[ext_resource type="Script" uid="uid://bsbru4h145d0a" path="res://scenes/target_follower.gd" id="2_xgyyx"]
 [ext_resource type="Material" uid="uid://bau3xtofjudn1" path="res://materials/alpha_debud.tres" id="4_c01g4"]
-[ext_resource type="Script" path="res://scenes/firearm.gd" id="5_dycce"]
-[ext_resource type="Script" path="res://scenes/up_alighner_modifier.gd" id="7_6osdw"]
-[ext_resource type="Script" path="res://scenes/speed_forward_alighner_modifyer.gd" id="8_wbkbb"]
+[ext_resource type="Script" uid="uid://cpd471vpqyq6y" path="res://scenes/firearm.gd" id="5_dycce"]
+[ext_resource type="Script" uid="uid://boa0bckrp102y" path="res://scenes/up_alighner_modifier.gd" id="7_6osdw"]
+[ext_resource type="Script" uid="uid://b42du2bjcvfm" path="res://scenes/speed_forward_alighner_modifyer.gd" id="8_wbkbb"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4s8sx"]
 rough = true
@@ -50,7 +50,7 @@ radial_segments = 5
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_uch4w"]
 
-[node name="player" type="RigidBody3D"]
+[node name="player" type="RigidBody3D" node_paths=PackedStringArray("firearm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_layer = 2
 mass = 80.0
@@ -59,6 +59,7 @@ script = ExtResource("1_5thm2")
 shoot_force = 500.0
 linear_dumper = 4000
 angular_dumper = 200
+firearm = NodePath("Suspention/Torso/Firearm")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_7hv5h")

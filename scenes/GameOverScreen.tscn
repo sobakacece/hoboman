@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bnjg44vwvtknu"]
 
-[ext_resource type="Script" path="res://scenes/game_over_screen.gd" id="1_0qq0s"]
+[ext_resource type="Script" uid="uid://dgvp5p21sb67v" path="res://scenes/game_over_screen.gd" id="1_0qq0s"]
 [ext_resource type="FontFile" uid="uid://dawgu6h6ry7iq" path="res://assets/fonts/Underdog-Regular.ttf" id="1_ruuu2"]
 
 [node name="GameOverScreen" type="Control" node_paths=PackedStringArray("win_button")]
