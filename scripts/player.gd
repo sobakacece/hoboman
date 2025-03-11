@@ -11,6 +11,7 @@ class_name Player
 @export var shoot_force : float = 10.0
 @export var linear_dumper = 120
 @export var angular_dumper = 10
+@export var pointing_gun_down_radius = 3
 
 var camera : Camera3D
 var torso : Node3D
@@ -58,10 +59,17 @@ func _physics_process(delta: float) -> void:
 		pitch = clamp(pitch, -MAX_PITCH, MAX_PITCH)
 		
 		var target_basis = Basis.IDENTITY.rotated(Vector3.RIGHT, pitch)
-		firearm.basis = firearm.basis.slerp(target_basis, rotation_speed * delta)
+
+		#calculate if gun should be pointed down (if mouse cursor is to close - point down), if to far - point straight ahead
+		if (target_point.distance_to(self.position) > pointing_gun_down_radius):
+			var euler_temp = firearm.basis.slerp(target_basis, rotation_speed * delta).get_euler()
+			euler_temp.x = lerp(euler_temp.x, float(0), delta * 10)
+			firearm.basis = Basis.from_euler(euler_temp)
+		else:
+			firearm.basis = firearm.basis.slerp(target_basis, rotation_speed * delta)
 		
-		Global.debug([firearm.global_position, result.position])
-	
+	#draw debug not from result point, but with firearm position
+	Global.debug([firearm.global_transform.origin, -firearm.global_basis.z.normalized() * 50 + firearm.global_transform.origin])
 	dumping(delta)
 
 func dumping(delta):
